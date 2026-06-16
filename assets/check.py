@@ -9,6 +9,7 @@
 - разъехавшиеся заголовки (строк больше задуманного — уменьшить кегль),
 - битые/не загрузившиеся картинки,
 - прозрачные слои (rgba/полупрозрачный градиент — риск мерцания PDF в Acrobat),
+- низкий контраст текста к фону (WCAG — особенно бледный акцент на светлой теме),
 - наезд элементов за границу слайда.
 
 Возвращает список проблемных слайдов. Код выхода != 0, если есть косяки
@@ -22,6 +23,10 @@ import sys, os
 AUDIT_JS = r"""
 (opts) => {
   const H = 720, out = [];
+  const lin = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+  const lumc = rgb => 0.2126 * lin(rgb[0]) + 0.7152 * lin(rgb[1]) + 0.0722 * lin(rgb[2]);
+  const parseCol = s => { const m = (s || '').match(/rgba?\(([^)]+)\)/); if (!m) return null; const a = m[1].split(',').map(parseFloat); return { rgb: [a[0], a[1], a[2]], a: a[3] === undefined ? 1 : a[3] }; };
+  const bgOf = el => { let e = el; while (e) { const c = parseCol(getComputedStyle(e).backgroundColor); if (c && c.a > 0.5) return c.rgb; e = e.parentElement; } return [10, 12, 9]; };
   const slides = [...document.querySelectorAll('.slide')];
   slides.forEach((s, i) => {
     const p = [];
@@ -56,6 +61,17 @@ AUDIT_JS = r"""
       if (/gradient/.test(cs.backgroundImage) && /(rgba|transparent)/.test(cs.backgroundImage)) transp++;
     });
     if (transp > 0) p.push('прозрачные слои (' + transp + ') — риск мерцания PDF в Acrobat, сделать сплошными');
+    // контраст контент-текста к его фону (WCAG); акцентные плашки на градиенте не трогаем
+    let worst = 99, worstTxt = '';
+    s.querySelectorAll('.title, .title--teal, .subtitle, .lead, .dim, .steps .h, .steps .s, .row-card .body, ol.plain li').forEach(t => {
+      const txt = (t.textContent || '').trim(); if (!txt) return;
+      const fg = parseCol(getComputedStyle(t).color); if (!fg) return;
+      const L1 = lumc(fg.rgb), L2 = lumc(bgOf(t));
+      const cr = (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+      if (cr < worst) { worst = cr; worstTxt = txt.slice(0, 22); }
+    });
+    if (worst < opts.contrast)
+      p.push('низкий контраст текста ' + worst.toFixed(1) + ':1 («' + worstTxt + '») — плохо читается, поднять контраст');
     if (p.length) out.push({ slide: i + 1, problems: p });
   });
   return { total: slides.length, issues: out };
@@ -76,6 +92,8 @@ def main():
                     help="во сколько раз низ пустее верха = косяк, а не центровка (1.6)")
     ap.add_argument("--head-max-lines", type=int, default=4, dest="head_max_lines",
                     help="заголовок без <br> от скольких строк считать разъехавшимся (4)")
+    ap.add_argument("--contrast", type=float, default=3.0,
+                    help="мин. контраст текста к фону по WCAG, ниже = косяк (3.0)")
     ap.add_argument("--quiet", action="store_true", help="печатать только итоговую строку")
     args = ap.parse_args()
 
@@ -87,7 +105,8 @@ def main():
     except ImportError:
         sys.exit("Нужен playwright: pip install playwright")
     opts = {"overflow": args.overflow, "freeBottom": args.free_bottom,
-            "freeRatio": args.free_ratio, "headMaxLines": args.head_max_lines}
+            "freeRatio": args.free_ratio, "headMaxLines": args.head_max_lines,
+            "contrast": args.contrast}
     with sync_playwright() as pw:
         try:
             b = pw.chromium.launch(channel="chrome", headless=True)

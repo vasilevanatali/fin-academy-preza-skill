@@ -160,6 +160,33 @@ def generate(prompt, out, glow=(168, 232, 74), seed=7, retries=3, raw=False):
     return True
 
 
+def suggest_offline(word, here):
+    """Сервис не ответил — подсказать готовую иконку из библиотеки (она работает БЕЗ сети).
+    Сборка презы оффлайн-устойчива: 30 объектов уже лежат в objects/."""
+    import json
+    objs_dir = os.path.join(here, "objects")
+    hits = []
+    try:
+        objs = json.load(open(os.path.join(objs_dir, "manifest.json"), encoding="utf-8")).get("objects", {})
+        wl = (word or "").lower()
+        for k, kws in objs.items():
+            if os.path.exists(os.path.join(objs_dir, k + ".png")) and any(
+                    kw == wl or (len(kw) >= 4 and kw in wl) or (len(wl) >= 4 and wl in kw)
+                    for kw in [k] + list(kws)):
+                hits.append(k)
+    except Exception:
+        pass
+    print("  Совет: преза собирается ОФФЛАЙН из готовой библиотеки objects/ (без сети).")
+    if hits:
+        print("  Похожее уже есть:", ", ".join(hits[:6]), "— вставь из objects/.")
+    else:
+        try:
+            avail = [f[:-4] for f in sorted(os.listdir(objs_dir)) if f.endswith(".png")]
+            print("  В библиотеке (без генерации):", ", ".join(avail[:14]), "…")
+        except OSError:
+            pass
+
+
 def main():
     a = sys.argv[1:]
     color = a[a.index("--color") + 1] if "--color" in a else DEFAULT_COLOR
@@ -190,7 +217,8 @@ def main():
     concept = a[0]
     thing = LIBRARY.get(concept, concept)
     out = a[a.index("--out") + 1] if "--out" in a else os.path.join(here, "objects", concept + ".png")
-    generate(STYLE.format(color=color, thing=thing), out, glow, retries=retries)
+    if not generate(STYLE.format(color=color, thing=thing), out, glow, retries=retries):
+        suggest_offline(concept, here)
 
 
 if __name__ == "__main__":

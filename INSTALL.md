@@ -98,10 +98,10 @@ ln -s ~/.claude/skills/fin-academy-preza ~/.agents/skills/fin-academy-preza
 | `assets/theme.css`                 | тема, палитра в `:root`                                               |
 | `assets/slide-templates.html`      | готовые блоки слайдов                                                 |
 | `assets/gen-3d.py`                 | генератор 3D-объектов (бесплатный Pollinations.ai)                    |
-| `assets/palette.py`                | анализ палитры из референса                                           |
+| `assets/palette.py`                | полный `:root` из референса (светлая/тёмная тема авто)                |
 | `assets/font-compare.py`           | рендер шрифтов-кандидатов одним листом для сверки с референсом        |
 | `assets/fetch-font.py`             | скачать выбранную шрифтовую пару с Google Fonts локально              |
-| `assets/check.py`                  | авто-аудит вёрстки (переполнение, пустой низ, прозрачность, картинки) |
+| `assets/check.py`                  | авто-аудит вёрстки (переполнение, пустой низ, прозрачность, контраст) |
 | `assets/objects/`                  | библиотека 3D-иконок (30 шт) + `styles/` — эталоны 8 стилей           |
 | `assets/fonts/`, `bg-*.webp`       | локальные шрифты и фоны (чтобы PDF не мерцал)                         |
 

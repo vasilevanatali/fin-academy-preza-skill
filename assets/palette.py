@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 """
-Анализ референса дизайна -> палитра для презентации.
-Подаёшь картинку-референс (скрин чужого слайда, мудборд, лого, сайт), получаешь:
-фон (тёмный/светлый), цвет текста, 2 акцента + готовый блок :root для theme.css.
+Анализ референса дизайна -> ПОЛНАЯ палитра для презентации (под светлую и тёмную тему).
+Подаёшь картинку-референс (скрин чужого слайда, мудборд, лого, сайт), получаешь готовый
+блок :root ЦЕЛИКОМ: фон, текст, 2 акцента, карточки, границы, подложки. Для СВЕТЛОГО
+референса всё пересчитывается автоматически (белые карточки, видимые границы, тёмная
+подложка отключается, текст тёмный) — руками править не нужно.
 
   python3 palette.py reference.png
   python3 palette.py reference.jpg --colors 8
 
-Дальше: подставить выданные --bg/--accent/--accent2 в :root theme.css, перепечь фон
-(make-bg.py "#АКЦЕНТ" "#ВТОРОЙ") и генерить иконки в цвете акцента (gen-3d.py --color ...).
+Дальше: вставить выданный :root ЦЕЛИКОМ в theme.css, перепечь фон под акценты
+(make-bg.py "#АКЦЕНТ" "#ВТОРОЙ"), иконки в стиле/цвете референса (references/icon-styles.md).
 """
 import sys, colorsys
 from collections import Counter
@@ -22,7 +24,7 @@ def load(path, side=240):
 
 
 def lum(c):
-    return 0.2126 * c[0] + 0.7152 * c[1] + 0.5882 * c[2]
+    return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]
 
 
 def sat(c):
@@ -96,12 +98,32 @@ def main():
     print(f"Акцент 2: {hx(a2)}")
     print("Топ палитры:", "  ".join(hx(c) for c, _ in cl[:ncol]))
     print()
-    print("--- вставить в :root theme.css ---")
+    # полный набор переменных под тему — для светлого референса всё пересчитывается
+    # автоматически (карточки светлые, границы видимые, тёмная подложка отключается)
+    shift = lambda c, d: tuple(min(255, max(0, v + d)) for v in c)
+    bg2 = shift(bg, 12 if dark else -10)
+    card = shift(bg, 11) if dark else (255, 255, 255)
+    hair = shift(bg, 26) if dark else shift(bg, -32)
+    ink = (255, 255, 255) if lum(a1) < 140 else (10, 12, 9)  # текст на акцентной плашке
+    muted = (185, 194, 181) if dark else (107, 107, 96)
+    corner = 'url("bg-corner.webp")' if dark else "none"
+    center = 'url("bg-center.webp")' if dark else "none"
+
+    print(f"--- вставить ЦЕЛИКОМ в :root theme.css ({'тёмная' if dark else 'СВЕТЛАЯ'} тема) ---")
     print(f"  --bg: {hx(bg)};")
-    print(f"  --bg-2: {hx(tuple(min(255, max(0, v + (12 if dark else -12))) for v in bg))};")
-    print(f"  --white: {hx(text)};")
+    print(f"  --bg-2: {hx(bg2)};")
     print(f"  --lime: {hx(a1)};   /* главный акцент с референса */")
     print(f"  --teal: {hx(a2)};   /* второй акцент */")
+    print(f"  --white: {hx(text)};   /* основной текст ({'светлый' if dark else 'тёмный'}) */")
+    print(f"  --ink: {hx(ink)};   /* текст на акцентной плашке/кнопке */")
+    print(f"  --muted: {hx(muted)};")
+    print(f"  --card-dark: {hx(card)};   /* карточка */")
+    print(f"  --hair: {hx(hair)};   /* граница */")
+    print(f"  --bg-corner: {corner};")
+    print(f"  --bg-center: {center};")
+    if not dark:
+        print("  /* СВЕТЛАЯ тема: подложки отключены (none), карточки белые. В slide-templates")
+        print("     тёмные плашки-выводы (#171d0e и т.п.) заменить на светлые контрастные. */")
     print()
     print("Дальше:")
     print(f'  python3 make-bg.py "{hx(a1)}" "{hx(a2)}"        # перепечь фон-свечение под цвет')
