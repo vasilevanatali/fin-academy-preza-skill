@@ -98,7 +98,8 @@ ln -s ~/.claude/skills/fin-academy-preza ~/.agents/skills/fin-academy-preza
 | `assets/slide-templates.html`      | готовые блоки слайдов                                                 |
 | `assets/gen-3d.py`                 | генератор 3D-объектов (бесплатный Pollinations.ai)                    |
 | `assets/palette.py`                | анализ палитры из референса                                           |
-| `assets/fetch-font.py`             | скачать шрифтовую пару с Google Fonts локально (по референсу)         |
+| `assets/font-compare.py`           | рендер шрифтов-кандидатов одним листом для сверки с референсом        |
+| `assets/fetch-font.py`             | скачать выбранную шрифтовую пару с Google Fonts локально              |
 | `assets/check.py`                  | авто-аудит вёрстки (переполнение, пустой низ, прозрачность, картинки) |
 | `assets/objects/`                  | библиотека готовых 3D-иконок                                          |
 | `assets/fonts/`, `bg-*.webp`       | локальные шрифты и фоны (чтобы PDF не мерцал)                         |

@@ -20,13 +20,13 @@
 import sys, os
 
 AUDIT_JS = r"""
-() => {
+(opts) => {
   const H = 720, out = [];
   const slides = [...document.querySelectorAll('.slide')];
   slides.forEach((s, i) => {
     const p = [];
     const center = s.classList.contains('slide--center') || s.classList.contains('slide--cover');
-    if (s.scrollHeight - s.clientHeight > 2)
+    if (s.scrollHeight - s.clientHeight > opts.overflow)
       p.push('переполнение +' + (s.scrollHeight - s.clientHeight) + 'px — контент вылезает за слайд');
     if (!center) {
       const kids = [...s.children];
@@ -35,7 +35,7 @@ AUDIT_JS = r"""
         kids.forEach(k => { const r = k.getBoundingClientRect(); maxB = Math.max(maxB, r.bottom - top); minT = Math.min(minT, r.top - top); });
         const freeBottom = H - maxB, freeTop = minT;
         // косяк = низ заметно пустее верха (контент прижат вверх), а не центрированный с равными полями
-        if (freeBottom > 220 && freeBottom > freeTop * 1.6)
+        if (freeBottom > opts.freeBottom && freeBottom > freeTop * opts.freeRatio)
           p.push('низ пустой ~' + Math.round(freeBottom) + 'px при отступе сверху ' + Math.round(freeTop) + 'px — контент смещён вверх, центрировать или наполнить');
       }
     }
@@ -43,7 +43,7 @@ AUDIT_JS = r"""
       const lh = parseFloat(getComputedStyle(h).lineHeight) || 1;
       const lines = Math.round(h.getBoundingClientRect().height / lh);
       const br = (h.innerHTML.match(/<br/g) || []).length;
-      if ((br > 0 && lines > br + 1) || (br === 0 && lines >= 4))
+      if ((br > 0 && lines > br + 1) || (br === 0 && lines >= opts.headMaxLines))
         p.push('заголовок «' + h.textContent.trim().replace(/\s+/g, ' ').slice(0, 28) + '» на ' + lines + ' строк — разъехался, уменьшить кегль');
     });
     s.querySelectorAll('img').forEach(im => {
@@ -64,15 +64,30 @@ AUDIT_JS = r"""
 
 
 def main():
-    if len(sys.argv) < 2:
-        sys.exit("Использование: python3 check.py <index.html>")
-    path = os.path.abspath(sys.argv[1])
+    import argparse
+    ap = argparse.ArgumentParser(
+        description="Авто-аудит вёрстки дека (слайды 1280x720). Код выхода !=0 при косяках.")
+    ap.add_argument("path", help="index.html деком")
+    ap.add_argument("--overflow", type=float, default=2,
+                    help="порог переполнения за край, px (по умолч. 2)")
+    ap.add_argument("--free-bottom", type=float, default=220, dest="free_bottom",
+                    help="пустой низ от скольких px считать косяком (220)")
+    ap.add_argument("--free-ratio", type=float, default=1.6, dest="free_ratio",
+                    help="во сколько раз низ пустее верха = косяк, а не центровка (1.6)")
+    ap.add_argument("--head-max-lines", type=int, default=4, dest="head_max_lines",
+                    help="заголовок без <br> от скольких строк считать разъехавшимся (4)")
+    ap.add_argument("--quiet", action="store_true", help="печатать только итоговую строку")
+    args = ap.parse_args()
+
+    path = os.path.abspath(args.path)
     if not os.path.exists(path):
         sys.exit("Файл не найден: " + path)
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
         sys.exit("Нужен playwright: pip install playwright")
+    opts = {"overflow": args.overflow, "freeBottom": args.free_bottom,
+            "freeRatio": args.free_ratio, "headMaxLines": args.head_max_lines}
     with sync_playwright() as pw:
         try:
             b = pw.chromium.launch(channel="chrome", headless=True)
@@ -81,17 +96,18 @@ def main():
         pg = b.new_page(viewport={"width": 1280, "height": 720})
         pg.goto("file://" + path, wait_until="networkidle")
         pg.wait_for_timeout(400)
-        res = pg.evaluate(AUDIT_JS)
+        res = pg.evaluate(AUDIT_JS, opts)
         b.close()
     issues = res["issues"]
     print(f"Слайдов: {res['total']}, проблемных: {len(issues)}")
     if not issues:
         print("✓ Косяков не найдено.")
         return
-    for it in issues:
-        print(f"\nСлайд {it['slide']}:")
-        for pr in it["problems"]:
-            print("  •", pr)
+    if not args.quiet:
+        for it in issues:
+            print(f"\nСлайд {it['slide']}:")
+            for pr in it["problems"]:
+                print("  •", pr)
     print(f"\nИтого {len(issues)} слайд(ов) с косяками — починить и прогнать check.py снова.")
     sys.exit(1)
 

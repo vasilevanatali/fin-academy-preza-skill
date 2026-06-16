@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 # Рендерит HTML-деком в PDF через headless Google Chrome.
+# Перед сборкой гоняет авто-аудит вёрстки (check.py), если есть playwright —
+# показывает косяки, но НЕ блокирует (отключить: третий аргумент --no-check).
 # Использование:
-#   ./make-pdf.sh [input.html] [output.pdf]
+#   ./make-pdf.sh [input.html] [output.pdf] [--no-check]
 # По умолчанию: input=slide-templates.html, output=<input>.pdf
-# Требует: python3 + Google Chrome (macOS).
+# Требует: python3 + Google Chrome (macOS); аудит — опц. pip install playwright.
 
 set -e
 cd "$(dirname "$0")"
@@ -15,6 +17,14 @@ PORT="${PORT:-8769}"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 [ -f "$CHROME" ] || { echo "✗ Google Chrome не найден в /Applications/"; exit 1; }
 [ -f "$IN" ] || { echo "✗ Нет файла $IN"; exit 1; }
+
+# Авто-аудит вёрстки перед сборкой (не блокирует; отключить аргументом --no-check)
+NOCHECK=0; for arg in "$@"; do [ "$arg" = "--no-check" ] && NOCHECK=1; done
+if [ "$NOCHECK" != 1 ] && python3 -c "import playwright" >/dev/null 2>&1; then
+  echo "→ Аудит вёрстки (check.py)…"
+  python3 "$(dirname "$0")/check.py" "$IN" \
+    || echo "⚠ Есть косяки вёрстки (см. выше) — лучше починить до отправки. PDF соберу всё равно."
+fi
 
 KILL=0
 if ! lsof -ti:"$PORT" >/dev/null 2>&1; then
