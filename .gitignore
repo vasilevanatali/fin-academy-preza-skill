@@ -1,0 +1,21 @@
+# секреты — НИКОГДА в репозиторий
+*.env
+*.env.*
+.env*
+*.token
+*.key
+*.pem
+id_rsa*
+.credentials
+credentials*
+
+# мусор ОС / редакторов
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# временное / сборки
+/tmp/
+*.log

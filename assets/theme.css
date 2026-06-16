@@ -1,0 +1,435 @@
+/* ============================================================
+   FIN-ACADEMY PREZA — фирменная тема презентаций  (v2)
+   Школа «Финансовый директор | Мастер CFO»
+   Тёмная тема, кислотный лайм + мятная бирюза. 16:9.
+   v2: локальные шрифты + запечённый фон (быстро, без мерцания) + 3D-объекты.
+   Свап под новый референс: меняй только блок :root.
+   ============================================================ */
+
+@import url("fonts.css"); /* Montserrat локально, без сети */
+
+:root {
+  /* --- ПАЛИТРА (меняем под референс цвета) --- */
+  --bg: #0a0c09; /* фон-база, почти чёрный */
+  --bg-2: #151715; /* тёмные карточки */
+  --lime: #a8e84a; /* основной акцент */
+  --lime-br: #dcff41; /* яркий лайм (кнопки/пики) */
+  --teal: #64febe; /* мятная бирюза (вторая в градиенте) */
+  --ink: #0a0c09; /* тёмный текст на лайме */
+  --white: #ffffff;
+  --muted: #b9c2b5;
+  --red: #e5332a;
+
+  --grad: linear-gradient(95deg, var(--lime) 0%, var(--teal) 100%);
+  --grad-title: linear-gradient(92deg, var(--lime) 0%, #ffffff 78%);
+  --card-dark: rgba(22, 24, 21, 0.72);
+  --hair: rgba(255, 255, 255, 0.1);
+  --radius: 26px;
+
+  /* --- ГЕОМЕТРИЯ --- */
+  --w: 1280px;
+  --h: 720px;
+  --pad: 84px;
+  --pad-y: 64px;
+
+  /* фоновые подложки (запечены: свечение + контур + виньетка) */
+  --bg-corner: url("bg-corner.webp");
+  --bg-center: url("bg-center.webp");
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html,
+body {
+  background: #000;
+}
+
+/* ---------- СЛАЙД ---------- */
+.slide {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  padding: var(--pad-y) var(--pad);
+  background: var(--bg) var(--bg-corner) center / cover no-repeat;
+  color: var(--white);
+  font-family: "Montserrat", system-ui, sans-serif;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slide > * {
+  position: relative;
+  z-index: 2;
+}
+
+.slide--center {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background-image: var(--bg-center);
+}
+.slide--cover {
+  justify-content: center;
+}
+
+/* ---------- ТИПОГРАФИКА ---------- */
+/* Заголовки — СПЛОШНЫМ цветом, без background-clip:text.
+   Градиентный текст (clip:text) в headless-Chrome при печати в PDF оставляет
+   тонкую линию-рамку по краю блока (тянется через весь слайд под заголовком и
+   у крупных цифр). Лечится только отказом от градиента В ТЕКСТЕ — поэтому здесь
+   сплошной лайм/бирюза/белый. Градиент остаётся на ЗАЛИВКАХ фигур (pill, .ico,
+   кружки steps) — там артефакта нет. НЕ возвращать clip:text на текст. */
+.title {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 54px;
+  line-height: 1.04;
+  letter-spacing: 0.2px;
+  color: var(--lime);
+  -webkit-text-fill-color: var(--lime);
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+.title--teal {
+  color: var(--teal);
+  -webkit-text-fill-color: var(--teal);
+}
+.title--white {
+  background: none;
+  color: var(--white);
+  -webkit-text-fill-color: var(--white);
+}
+.title.big {
+  font-size: 72px;
+}
+.title.full {
+  max-width: 100%;
+}
+
+.subtitle {
+  font-weight: 500;
+  font-size: 24px;
+  color: var(--muted);
+  margin-top: 14px;
+  max-width: 60%;
+}
+.lead {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.45;
+  color: var(--white);
+}
+.dim {
+  color: var(--muted);
+}
+.accent {
+  color: var(--lime);
+}
+.bold {
+  font-weight: 700;
+}
+.italic {
+  font-style: italic;
+}
+
+/* ---------- ТАБЛЕТКА (pill) ---------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  border-radius: 999px;
+  background: var(--grad);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 20px;
+  white-space: nowrap;
+  box-shadow: 0 0 28px rgba(168, 232, 74, 0.3);
+}
+.pill--solid {
+  background: var(--lime);
+}
+.pill--sm {
+  padding: 7px 16px;
+  font-size: 16px;
+}
+
+/* ---------- КАРТОЧКИ (без backdrop-filter — ради скорости) ---------- */
+.card {
+  background: var(--card-dark);
+  border: 1px solid var(--hair);
+  border-radius: var(--radius);
+  padding: 36px 40px;
+}
+.card-white {
+  background: var(--white);
+  color: #16201a;
+  border-radius: 20px;
+  padding: 22px 24px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---------- БЕЙДЖ ---------- */
+.badge {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+.badge .ico {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  background: var(--grad);
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  font-size: 26px;
+  box-shadow: 0 0 24px rgba(168, 232, 74, 0.35);
+}
+.badge .ttl {
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--lime);
+  font-size: 18px;
+  letter-spacing: 0.5px;
+}
+
+/* ---------- НУМЕРОВАННЫЙ СПИСОК ---------- */
+.steps {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  counter-reset: s;
+}
+.steps li {
+  display: grid;
+  grid-template-columns: 46px 1fr;
+  gap: 18px;
+  align-items: start;
+  position: relative;
+}
+.steps li::before {
+  counter-increment: s;
+  content: counter(s);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--grad);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 20px rgba(168, 232, 74, 0.3);
+}
+.steps .h {
+  font-weight: 700;
+  color: var(--lime);
+  font-size: 24px;
+}
+.steps .s {
+  font-weight: 500;
+  color: var(--white);
+  font-size: 20px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+.steps li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 19px;
+  top: 46px;
+  bottom: -26px;
+  width: 2px;
+  background: linear-gradient(var(--lime), transparent);
+  opacity: 0.45;
+}
+
+ol.plain {
+  list-style: none;
+  counter-reset: p;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+ol.plain li {
+  counter-increment: p;
+  font-size: 21px;
+  line-height: 1.4;
+  padding-left: 38px;
+  position: relative;
+}
+ol.plain li::before {
+  content: counter(p) ".";
+  position: absolute;
+  left: 0;
+  color: var(--lime);
+  font-weight: 700;
+}
+
+/* ---------- GOOD / BAD ---------- */
+.mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+.mark--no {
+  background: var(--red);
+  color: #fff;
+}
+.mark--yes {
+  background: var(--grad);
+  color: var(--ink);
+}
+.row-card {
+  background: var(--card-dark);
+  border: 1px solid var(--hair);
+  border-radius: 20px;
+  padding: 22px 26px;
+  margin-bottom: 18px;
+}
+.row-card .head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.row-card .body {
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--white);
+}
+
+/* ---------- РАСКЛАДКИ ---------- */
+.two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  flex: 1;
+}
+.two > *,
+.stack > * {
+  min-width: 0;
+}
+.two--l {
+  grid-template-columns: 1.05fr 0.95fr;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+.spacer {
+  flex: 1;
+}
+.wall {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+/* ---------- 3D-ОБЪЕКТ (прозрачный PNG + свечение + тень) ---------- */
+.obj-wrap {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  min-height: 280px;
+}
+.obj3d {
+  max-width: 100%;
+  max-height: 86%;
+  object-fit: contain;
+  /* свечение и тень ЗАПЕЧЕНЫ в PNG (gen-3d.py) — без CSS-фильтра, чтобы PDF
+     не растрировался и не мерцал. Бесшовно ложится на тёмный фон. */
+}
+.obj3d.sm {
+  max-height: 60%;
+}
+.obj3d.lg {
+  max-height: 96%;
+}
+/* плейсхолдер, если объект ещё не сгенерён */
+.obj {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border-radius: 24px;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 15px;
+  border: 1px dashed var(--hair);
+}
+
+.pageno {
+  position: absolute;
+  right: 28px;
+  bottom: 20px;
+  font-size: 14px;
+  color: var(--muted);
+  z-index: 3;
+}
+
+/* ---------- ЭКРАН: лента слайдов ---------- */
+body.deck {
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 28px 0;
+}
+body.deck .slide {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ---------- ПЕЧАТЬ В PDF ---------- */
+@page {
+  size: 1280px 720px;
+  margin: 0;
+}
+@media print {
+  body.deck {
+    background: #000;
+    gap: 0;
+    padding: 0;
+  }
+  .slide {
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .slide:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}
+
+/* ---------- КАЧЕСТВО ВЁРСТКИ ТЕКСТА (авто-страховка от висячих слов) ---------- */
+.title {
+  text-wrap: balance;
+}
+.lead,
+.subtitle,
+.row-card .body,
+.steps .s,
+ol.plain li,
+.card .lead,
+.badge .lead {
+  text-wrap: pretty; /* не оставляет одно слово на последней строке */
+}
