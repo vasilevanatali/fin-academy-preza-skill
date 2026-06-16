@@ -22,8 +22,8 @@
 
   --grad: linear-gradient(95deg, var(--lime) 0%, var(--teal) 100%);
   --grad-title: linear-gradient(92deg, var(--lime) 0%, #ffffff 78%);
-  --card-dark: rgba(22, 24, 21, 0.72);
-  --hair: rgba(255, 255, 255, 0.1);
+  --card-dark: #161814; /* сплошной (не rgba) — иначе PDF мерцает в Acrobat */
+  --hair: #232521; /* сплошная граница вместо полупрозрачной */
   --radius: 26px;
 
   /* --- ГЕОМЕТРИЯ --- */
@@ -248,8 +248,8 @@ body {
   top: 46px;
   bottom: -26px;
   width: 2px;
-  background: linear-gradient(var(--lime), transparent);
-  opacity: 0.45;
+  background: #44581f; /* сплошная линия-коннектор (не fade) — чтобы PDF не мерцал */
+  opacity: 1;
 }
 
 ol.plain {
@@ -330,6 +330,11 @@ ol.plain li::before {
   display: flex;
   flex-direction: column;
   gap: 26px;
+}
+/* утилита: растянуть блок на свободную высоту слайда (контент занимает площадь) */
+.grow {
+  flex: 1;
+  min-height: 0;
 }
 .spacer {
   flex: 1;

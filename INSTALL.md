@@ -11,9 +11,10 @@
 ## Что нужно один раз
 
 - Установлен **Claude Code** или **OpenAI Codex**.
-- **Python 3** и две библиотеки для генератора картинок:
+- **Python 3** и библиотеки:
   ```bash
-  pip3 install pillow numpy
+  pip3 install pillow numpy   # генератор картинок
+  pip3 install playwright     # авто-аудит вёрстки (check.py), использует системный Chrome
   ```
 - Установлен **git** (обычно уже есть на Mac/Linux; на Windows — Git for Windows).
 
@@ -79,22 +80,28 @@ ln -s ~/.claude/skills/fin-academy-preza ~/.agents/skills/fin-academy-preza
   ```bash
   python3 ~/.claude/skills/fin-academy-preza/assets/palette.py референс.png
   ```
+- **Проверить вёрстку готового дека** (переполнения, пустой низ, прозрачность-мерцание, битые картинки):
+  ```bash
+  python3 ~/.claude/skills/fin-academy-preza/assets/check.py deck/index.html
+  ```
 
 ---
 
 ## Что внутри
 
-| Файл                               | Зачем                                                                |
-| ---------------------------------- | -------------------------------------------------------------------- |
-| `SKILL.md`                         | как агент собирает презу, два режима (фирменный / по референсу)      |
-| `references/design-system.md`      | палитра, шрифты, сетка, типы слайдов                                 |
-| `references/slide-layout-rules.md` | чеклист вёрстки (что не обрезать, не оставлять пустым, выравнивание) |
-| `assets/theme.css`                 | тема, палитра в `:root`                                              |
-| `assets/slide-templates.html`      | готовые блоки слайдов                                                |
-| `assets/gen-3d.py`                 | генератор 3D-объектов (бесплатный Pollinations.ai)                   |
-| `assets/palette.py`                | анализ палитры из референса                                          |
-| `assets/objects/`                  | библиотека готовых 3D-иконок                                         |
-| `assets/fonts/`, `bg-*.webp`       | локальные шрифты и фоны (чтобы PDF не мерцал)                        |
+| Файл                               | Зачем                                                                 |
+| ---------------------------------- | --------------------------------------------------------------------- |
+| `SKILL.md`                         | как агент собирает презу, два режима (фирменный / по референсу)       |
+| `references/design-system.md`      | палитра, шрифты, сетка, типы слайдов                                  |
+| `references/slide-layout-rules.md` | чеклист вёрстки (что не обрезать, не оставлять пустым, выравнивание)  |
+| `assets/theme.css`                 | тема, палитра в `:root`                                               |
+| `assets/slide-templates.html`      | готовые блоки слайдов                                                 |
+| `assets/gen-3d.py`                 | генератор 3D-объектов (бесплатный Pollinations.ai)                    |
+| `assets/palette.py`                | анализ палитры из референса                                           |
+| `assets/fetch-font.py`             | скачать шрифтовую пару с Google Fonts локально (по референсу)         |
+| `assets/check.py`                  | авто-аудит вёрстки (переполнение, пустой низ, прозрачность, картинки) |
+| `assets/objects/`                  | библиотека готовых 3D-иконок                                          |
+| `assets/fonts/`, `bg-*.webp`       | локальные шрифты и фоны (чтобы PDF не мерцал)                         |
 
 Готовый дек собирается в HTML и печатается в PDF 16:9 через headless Chrome (`assets/make-pdf.sh`).
 

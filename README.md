@@ -44,7 +44,9 @@ python3 assets/palette.py reference.png    # палитра из референ�
 - `references/slide-layout-rules.md` — чеклист вёрстки (что не обрезать, не оставлять пустым, выравнивание, как избегать мерцания PDF).
 - `assets/theme.css`, `fonts/`, `bg-*.webp` — тема, локальные шрифты, фоны.
 - `assets/objects/` — библиотека 3D-иконок + `manifest.json` (подбор по смыслу слайда).
-- `assets/gen-3d.py`, `palette.py`, `make-bg.py`, `make-pdf.sh` — генерация объектов, палитры, фонов и сборка PDF.
+- `assets/gen-3d.py`, `palette.py`, `fetch-font.py` — генерация объектов, палитра и шрифтовая пара из референса.
+- `assets/check.py` — авто-аудит вёрстки (переполнения, пустой низ, прозрачность-мерцание, битые картинки).
+- `assets/make-bg.py`, `make-pdf.sh` — фоны и сборка PDF 16:9.
 
 ## Онлайн-школа «Финансовый директор · Мастер CFO»
 

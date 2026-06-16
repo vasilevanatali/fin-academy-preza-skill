@@ -194,7 +194,10 @@
     <section class="slide">
       <h2 class="title title--white">Что говорят о курсе</h2>
       <p class="subtitle">Я пролистаю слайды, потом можете почитать</p>
-      <div class="wall" style="margin-top: 24px">
+      <div
+        class="wall"
+        style="margin-top: 24px; flex: 1; align-content: center"
+      >
         <div class="card-white">
           «Огромное спасибо за курс! Практичные уроки, лёгкая подача, системный
           подход и апробация на практике…»
@@ -258,6 +261,254 @@
           "
         >
           QR-код
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. BIG-NUMBER: одна крупная метрика -->
+    <section class="slide slide--center">
+      <span class="pill">[категория]</span>
+      <div
+        class="title title--teal"
+        style="
+          font-size: 180px;
+          line-height: 0.9;
+          margin-top: 16px;
+          white-space: nowrap;
+        "
+      >
+        80%
+      </div>
+      <div
+        class="lead"
+        style="margin-top: 14px; max-width: 760px; text-align: center"
+      >
+        [что означает эта цифра]
+      </div>
+    </section>
+
+    <!-- 11. РЯД МЕТРИК: 3 цифры + вывод -->
+    <section class="slide">
+      <h2 class="title">[заголовок]</h2>
+      <div
+        style="
+          margin-top: 24px;
+          flex: 1;
+          align-content: center;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 18px;
+        "
+      >
+        <div class="card" style="padding: 40px">
+          <div
+            class="title title--teal"
+            style="font-size: 56px; white-space: nowrap"
+          >
+            ≈15 млн ₽
+          </div>
+          <div class="s" style="margin-top: 12px; font-size: 20px">
+            [подпись]
+          </div>
+        </div>
+        <div class="card" style="padding: 40px">
+          <div
+            class="title title--teal"
+            style="font-size: 56px; white-space: nowrap"
+          >
+            200К → 0
+          </div>
+          <div class="s" style="margin-top: 12px; font-size: 20px">
+            [подпись]
+          </div>
+        </div>
+        <div class="card" style="padding: 40px">
+          <div
+            class="title title--teal"
+            style="font-size: 56px; white-space: nowrap"
+          >
+            40%
+          </div>
+          <div class="s" style="margin-top: 12px; font-size: 20px">
+            [подпись]
+          </div>
+        </div>
+      </div>
+      <div
+        class="card"
+        style="
+          margin-top: 16px;
+          border-color: #45611f;
+          background: #171d0e;
+          padding: 22px 28px;
+        "
+      >
+        <div class="lead">
+          [вывод-акцент со словом <span class="bold accent">главное</span>]
+        </div>
+      </div>
+    </section>
+
+    <!-- 12. БЫЛО/СТАЛО: две колонки сравнения -->
+    <section class="slide">
+      <h2 class="title" style="font-size: 40px">[заголовок сравнения]</h2>
+      <div class="two grow" style="margin-top: 20px">
+        <div class="mc" style="padding: 30px">
+          <div class="cap">было</div>
+          <ul class="steps" style="margin-top: 14px">
+            <li>
+              <div>
+                <div class="h">[пункт]</div>
+                <div class="s">[деталь]</div>
+              </div>
+            </li>
+            <li>
+              <div><div class="h">[пункт]</div></div>
+            </li>
+            <li>
+              <div><div class="h">[пункт]</div></div>
+            </li>
+          </ul>
+        </div>
+        <div class="mc mc--lime" style="padding: 30px">
+          <div class="cap" style="color: var(--ink); opacity: 0.7">стало</div>
+          <ul class="steps" style="margin-top: 14px">
+            <li>
+              <div>
+                <div class="h">[пункт]</div>
+                <div class="s">[деталь]</div>
+              </div>
+            </li>
+            <li>
+              <div><div class="h">[пункт]</div></div>
+            </li>
+            <li>
+              <div><div class="h">[пункт]</div></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13. ТАЙМЛАЙН: этапы по годам -->
+    <section class="slide">
+      <h2 class="title">[заголовок]</h2>
+      <div
+        style="
+          margin-top: 24px;
+          flex: 1;
+          align-content: center;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 16px;
+        "
+      >
+        <div class="card">
+          <div class="title title--teal" style="font-size: 30px">2023</div>
+          <div class="s" style="margin-top: 10px">[веха]</div>
+        </div>
+        <div class="card">
+          <div class="title title--teal" style="font-size: 30px">2024</div>
+          <div class="s" style="margin-top: 10px">[веха]</div>
+        </div>
+        <div class="card">
+          <div class="title title--teal" style="font-size: 30px">2025</div>
+          <div class="s" style="margin-top: 10px">[веха]</div>
+        </div>
+        <div class="card">
+          <div class="title title--teal" style="font-size: 30px">2026</div>
+          <div class="s" style="margin-top: 10px">[веха]</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 14. ПРОЦЕСС: нумерованные шаги -->
+    <section class="slide">
+      <h2 class="title" style="font-size: 40px">[как это работает]</h2>
+      <ol
+        style="
+          margin-top: 22px;
+          padding-left: 30px;
+          font-size: 20px;
+          line-height: 1.5;
+          color: var(--white);
+          flex: 1;
+          justify-content: center;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        "
+      >
+        <li>[шаг 1]</li>
+        <li>[шаг 2]</li>
+        <li>[шаг 3]</li>
+        <li>[шаг 4]</li>
+      </ol>
+      <div class="dim" style="margin-top: 16px; font-size: 17px">
+        [итог одной фразой]
+      </div>
+    </section>
+
+    <!-- 15. СЕТКА 3x2: участки / пункты с подписями -->
+    <section class="slide">
+      <h2 class="title" style="font-size: 40px">[заголовок]</h2>
+      <div
+        style="
+          margin-top: 22px;
+          flex: 1;
+          align-content: center;
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 14px;
+        "
+      >
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
+        </div>
+        <div class="card" style="padding: 24px 26px">
+          <div class="ttl" style="color: var(--lime); font-size: 21px">
+            [пункт]
+          </div>
+          <div class="s" style="margin-top: 6px; font-size: 16px">
+            [описание]
+          </div>
         </div>
       </div>
     </section>
