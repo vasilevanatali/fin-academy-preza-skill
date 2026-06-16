@@ -56,9 +56,17 @@ def main():
         if not (wt and src):
             continue
         wt, st = wt.group(1), (st.group(1) if st else "normal")
-        # берём только latin и cyrillic подмножества (по наличию кода в unicode-range)
+        # базовую латиницу (ASCII + ЦИФРЫ) и расширенную берём ОТДЕЛЬНО — иначе цифры/латиница
+        # в заголовке свалятся на запасной шрифт (заметный рассинхрон в дисплейных шрифтах)
         urng = ur.group(1) if ur else ""
-        subset = "cyr" if "0400" in urng else ("lat" if "0000" in urng or "0100" in urng else None)
+        if "0400" in urng:
+            subset = "cyr"
+        elif "U+0000" in urng or "0000-00FF" in urng:
+            subset = "lat"   # ASCII, цифры, базовая пунктуация
+        elif "0100" in urng:
+            subset = "latx"  # расширенная латиница (диакритика)
+        else:
+            subset = None
         if subset is None:
             continue
         key = (wt, st, subset)

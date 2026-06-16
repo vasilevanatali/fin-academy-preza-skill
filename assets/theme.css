@@ -25,6 +25,10 @@
   --card-dark: #161814; /* сплошной (не rgba) — иначе PDF мерцает в Acrobat */
   --hair: #232521; /* сплошная граница вместо полупрозрачной */
   --radius: 26px;
+  /* заголовочный шрифт: дефолт Montserrat. Для премиум-вида поставить "Unbounded"
+     (дисплейный, уже в fonts/) — заголовки и крупные цифры станут заметно дороже. */
+  --font-title: "Montserrat", system-ui, sans-serif;
+  --shadow-md: 0 20px 45px rgba(0, 0, 0, 0.45);
 
   /* --- ГЕОМЕТРИЯ --- */
   --w: 1280px;
@@ -83,6 +87,7 @@ body {
    сплошной лайм/бирюза/белый. Градиент остаётся на ЗАЛИВКАХ фигур (pill, .ico,
    кружки steps) — там артефакта нет. НЕ возвращать clip:text на текст. */
 .title {
+  font-family: var(--font-title);
   font-weight: 800;
   text-transform: uppercase;
   font-size: 54px;
@@ -437,4 +442,93 @@ ol.plain li,
 .card .lead,
 .badge .lead {
   text-wrap: pretty; /* не оставляет одно слово на последней строке */
+}
+
+/* ---------- ПРЕМИУМ-ДЕТАЛИ (киккер, цифра-призрак, метрика, декор) ---------- */
+/* всё на сплошных цветах/тенях — PDF-safe, наследует переменные (работает и на светлой теме) */
+
+/* Киккер — мелкая подпись-eyebrow над заголовком: задаёт контекст и ритм */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 16px;
+}
+.kicker::before {
+  content: "";
+  width: 26px;
+  height: 2px;
+  background: var(--lime);
+}
+
+/* Цифра-призрак на фоне (номер раздела). Сплошной цвет чуть светлее фона (var(--bg-2)) —
+   без альфы, PDF не мерцает. Лежит ПОД контентом (z-index 1 < .slide > * z-index 2). */
+.ghost-num {
+  position: absolute;
+  right: 40px;
+  top: -30px;
+  z-index: 1;
+  font-family: var(--font-title);
+  font-weight: 900;
+  font-size: 340px;
+  line-height: 1;
+  color: var(--bg-2);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Карточка-метрика: акцент-линия сверху, мягкая тень, крупная дисплейная цифра */
+.metric {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-dark);
+  border: 1px solid var(--hair);
+  border-radius: 22px;
+  padding: 34px 30px;
+  box-shadow: var(--shadow-md);
+}
+.metric::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--grad);
+}
+.metric .num {
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 46px;
+  color: var(--teal);
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+.metric .lbl {
+  color: var(--muted);
+  font-size: 17px;
+  margin-top: 10px;
+}
+
+/* tabular-nums — выравнивает цифры в колонку (суммы в тарифах, метрики, таблицы) */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Угловой декор-акцент (тонкий уголок фирменным цветом) */
+.corner {
+  position: absolute;
+  right: 46px;
+  bottom: 34px;
+  width: 54px;
+  height: 54px;
+  border-right: 2px solid var(--lime);
+  border-bottom: 2px solid var(--lime);
+  border-bottom-right-radius: 14px;
+  z-index: 2;
 }
