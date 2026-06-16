@@ -36,6 +36,20 @@ LIBRARY = {
     "robot":       "friendly robot head (AI assistant)",
     "document":    "document / file sheet with folded corner",
     "chat":        "rounded chat speech bubble",
+    "calculator":  "calculator with buttons",
+    "percent":     "percent sign % symbol",
+    "scales":      "balanced justice scales",
+    "briefcase":   "business briefcase",
+    "diploma":     "a rolled-up graduation diploma scroll tied with a ribbon bow",
+    "calendar":    "calendar page showing a date",
+    "clock":       "alarm clock",
+    "key":         "shiny key",
+    "shield":      "protective shield with a checkmark",
+    "handshake":   "two hands shaking in a deal",
+    "team":        "three glossy 3D human figurines standing together as a team",
+    "star":        "shiny five-pointed star",
+    "megaphone":   "megaphone bullhorn",
+    "book":        "open book",
 }
 
 # Объект на ЧИСТО ЧЁРНОМ фоне (его потом вырезаем по яркости в прозрачность)
