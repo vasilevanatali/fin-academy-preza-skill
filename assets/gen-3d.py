@@ -149,12 +149,13 @@ def postprocess(path, maxside=720, glow=(168, 232, 74)):
         print("  (постобработка пропущена:", e, "— объект остаётся на чёрном фоне)")
 
 
-def generate(prompt, out, glow=(168, 232, 74), seed=7, retries=3):
+def generate(prompt, out, glow=(168, 232, 74), seed=7, retries=3, raw=False):
     if not fetch(prompt, out, seed, retries=retries):
         print("  ✗ Pollinations не отдал картинку после всех попыток и обоих движков.")
         print("    Это бесплатный публичный сервис — повторите позже или с другим --seed.")
         return False
-    postprocess(out, glow=glow)
+    if not raw:  # raw = сырой кадр (для эталонов стиля); иначе вырезать фон + запечь свечение
+        postprocess(out, glow=glow)
     print("  ✓", out)
     return True
 
@@ -182,7 +183,7 @@ def main():
     if "--prompt" in a:
         prompt = a[a.index("--prompt") + 1]
         out = a[a.index("--out") + 1] if "--out" in a else "object.png"
-        generate(prompt, out, glow, retries=retries); return
+        generate(prompt, out, glow, retries=retries, raw="--raw" in a); return
 
     if not a or a[0].startswith("--"):
         sys.exit(__doc__)
